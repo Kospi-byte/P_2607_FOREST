@@ -25,4 +25,4 @@
 [x] old/learning.py & main.py 는 데이터 그림 전체 (130*35) 로 학습과 실행   
 [x] 성능 저하 이슈로 배경은 삭제하고 숫자 영역만 사용하는 코드로 변경
 [x] 1: release version
-[x] (진행중) 2: Todo core 폴더에 파일 이름 변경, 추가로 모듈화 가능한지 검토
+[x] 2: core filename change
