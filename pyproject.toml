@@ -1,0 +1,23 @@
+[project]
+name = "p-2607-forest"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "PKF-BKLAPTOP", email = "intube005@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "dotenv>=0.9.9",
+    "joblib>=1.5.3",
+    "opencv-python>=5.0.0.93",
+    "scikit-learn>=1.9.0",
+    "selenium>=4.47.0",
+]
+
+[project.scripts]
+p-2607-forest = "p_2607_forest:main"
+
+[build-system]
+requires = ["uv_build>=0.12.3,<0.13.0"]
+build-backend = "uv_build"
