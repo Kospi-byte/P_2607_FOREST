@@ -28,3 +28,6 @@ def process_reservation_step(driver, pred_text):
     print(f"💬 알림창 내용: [{alert.text}]")
     alert.accept()
     print("✅ 알림창 [확인] 클릭 완료!")
+
+if __name__ == "__main__":
+    print("숲나들e 입력-동의-예약-알림확인")

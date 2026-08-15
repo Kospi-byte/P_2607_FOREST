@@ -8,13 +8,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 _ENV_PATH = BASE_DIR / ".env"
 # [경로 관련 설정]
 IMG_FOLDER_PATH = BASE_DIR / "data" / "learning"
-IMG_PATH = BASE_DIR / "data" / "learning" / "*.png"
 MODEL_FOLDER_PATH = BASE_DIR / "src" / "p_2607_forest" / "model"
 MODEL_PATH = BASE_DIR / "src" / "p_2607_forest" / "model" / "captcha_ml_model.pkl"
 
-# 2. .env 파일 강제 로드
-dotenv.load_dotenv(dotenv_path=_ENV_PATH)
+# 1collect.py 학습데이터 수집하기
+TOTAL_IMAGES_TO_COLLECT = 4
+# 4active_learning.py 반자동 데이터 레이블링
+AUTO_DATA_TO_COLLECT = 4
 
+dotenv.load_dotenv(dotenv_path=_ENV_PATH)
 # -------------------------------------------------------------
 # 3. 안전한 타입 변환 헬퍼 함수들 (NoneType / ValueError 방지용)
 # -------------------------------------------------------------
@@ -57,14 +59,3 @@ NUMBER_WIDTH_R = IMG_WIDTH - get_env_int("DEL_WIDTH_R", 14) # 숫자가 끝나�
 NUMBER_WIDTH = NUMBER_WIDTH_R - NUMBER_WIDTH_L # IMG_LENGTH = 6 나누기 위해 6의 배수 맞춤
 NUMBER_HEIGHT = IMG_HEIGHT - get_env_int("DEL_WIDTH_B", 9) # (하여백 제거용)
 IMG_LENGTH = get_env_int("COUNT_OF_NUMBER", 6) # 글자수
-
-# # [경로 관련 설정]
-# IMG_FOLDER_PATH = "../../data/learning"
-# IMG_PATH = "../../data/learning/*.png"
-# MODEL_FOLDER_PATH = "./model"
-# MODEL_PATH = "./model/captcha_ml_model.pkl"
-
-# 1collect.py 학습데이터 수집하기
-TOTAL_IMAGES_TO_COLLECT = 4
-# 4active_learning.py 반자동 데이터 레이블링
-AUTO_DATA_TO_COLLECT = 4

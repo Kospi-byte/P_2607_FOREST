@@ -5,9 +5,9 @@ import joblib
 from selenium.webdriver.common.by import By
 
 from p_2607_forest.config import BASE_DIR
-from p_2607_forest.core.make_url import get_url
-from p_2607_forest.core.image_utils import predict_captcha
-from p_2607_forest.core.web_utils import process_reservation_step
+from p_2607_forest.core.get_url import get_url
+from p_2607_forest.core.predict_imgbyte import predict_captcha_from_imgbyte
+from p_2607_forest.core.webdriver_foreste import process_reservation_step
 
 from p_2607_forest.utils.webdriver_chrome import create_chrome
 from p_2607_forest.utils.webdriver_login import login_forest
@@ -89,7 +89,7 @@ def main():
                 captcha_element = driver.find_element(By.ID, "captchaImg")
                 img_bytes = captcha_element.screenshot_as_png
                 
-                pred_text = predict_captcha(model, img_bytes)
+                pred_text = predict_captcha_from_imgbyte(model, img_bytes)
                 if not pred_text:
                     print("❌ 캡차 이미지를 로드하는 데 실패했습니다. 다시 시도해 주세요.")
                     continue

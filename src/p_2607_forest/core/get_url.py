@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 import os, re
 
 import dotenv
-# .env 파일 로드
 dotenv.load_dotenv()
 
 def get_url(mode: str) -> str:
@@ -13,12 +12,12 @@ def get_url(mode: str) -> str:
 
     # 2. 인자에 따른 주소 매핑 (예시 주소)
     if clean_mode == "draw":
-        url = os.getenv("DRAW_URL")
+        url = os.getenv("DRAW_URL", "www.google.com")        
     elif clean_mode == "first":        
+        base_url = os.getenv("FIRST_URL", "www.google.com")
         # ==================================================
         # 2. URL 자동 생성 (Today +30D)
         # ==================================================
-        base_url = os.getenv("FIRST_URL")
         # 1) 날짜 계산
         bg_date = (datetime.now() + timedelta(days=30)).strftime("%Y%m%d")
         ed_date = (datetime.now() + timedelta(days=31)).strftime("%Y%m%d")
@@ -32,3 +31,7 @@ def get_url(mode: str) -> str:
         )
 
     return url
+
+if __name__ == "__main__":
+    print(get_url('draw'))
+    print(get_url('first'))

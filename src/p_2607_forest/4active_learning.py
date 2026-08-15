@@ -1,14 +1,10 @@
 import os, time, random
-import cv2
-import numpy as np
 import joblib
 from selenium.webdriver.common.by import By
 
-from p_2607_forest.core.make_url import get_url
+from p_2607_forest.core.get_url import get_url
+from p_2607_forest.core.predict_imgbyte import predict_captcha_from_imgbyte
 from p_2607_forest.config import (
-    IMG_WIDTH, IMG_HEIGHT,
-    NUMBER_WIDTH_L, NUMBER_WIDTH_R,
-    NUMBER_WIDTH, NUMBER_HEIGHT,
     IMG_LENGTH, MODEL_PATH,
     IMG_FOLDER_PATH, AUTO_DATA_TO_COLLECT
 )
@@ -17,34 +13,6 @@ from p_2607_forest.utils.webdriver_login import login_forest
 
 _TOTAL_IMAGES_TO_COLLECT = AUTO_DATA_TO_COLLECT # 한 세션에 레이블링할 이미지 개수
 _TARGET_URL = get_url('first')
-
-# ==========================================
-# 2. 이미지 전처리 함수 (파일 경로 대신 바이너리 데이터 직접 처리)
-# ==========================================
-def preprocess_captcha_from_bytes(img_bytes):
-    """셀레니움이 캡처한 이미지 바이트 데이터를 메모리 상에서 바로 전처리"""
-    # 바이트 배열을 OpenCV 이미지 객체로 디코딩
-    nparr = np.frombuffer(img_bytes, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
-    
-    if img is None:
-        return None
-    
-    # 기존 여백 제거 로직 적용
-    img = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT))
-    img = img[:NUMBER_HEIGHT, NUMBER_WIDTH_L : NUMBER_WIDTH_R]
-    img = img.astype(np.float32) / 255.0
-    
-    char_width = NUMBER_WIDTH // IMG_LENGTH
-    char_images = []
-    
-    for i in range(IMG_LENGTH):
-        start_x = i * char_width
-        end_x = start_x + char_width
-        char_img = img[:, start_x:end_x]
-        char_images.append(char_img.flatten())
-        
-    return np.array(char_images)
 
 # ==========================================
 # 3. 실시간 액티브 러닝 코어 함수
@@ -87,23 +55,11 @@ def active_learning_collector(target_url, count=10):
         
         while success_count < count:
             try:
-                # 캡차 엘리먼트 가져오기
-                captcha_element = driver.find_element(By.ID, "captchaImg")
-                
-                # 💡 디스크에 임시 저장하지 않고 이미지 바이트를 통째로 가져옴 (속도 향상 및 찌꺼기 방지)
+                # 캡차 엘리먼트 가져오기 (메모리 처리, 디스크 저장 X)
+                captcha_element = driver.find_element(By.ID, "captchaImg")                                
                 img_bytes = captcha_element.screenshot_as_png
-                
-                # 머신러닝 모델 예측을 위한 전처리 수행
-                char_features = preprocess_captcha_from_bytes(img_bytes)
-                if char_features is None:
-                    print("⚠️ 이미지 데이터를 읽을 수 없습니다. 페이지를 새로고침합니다.")
-                    driver.refresh()
-                    time.sleep(3)
-                    continue
-                
-                # 모델 예측 수행
-                predictions = model.predict(char_features)
-                pred_text = "".join(predictions)
+                # 캡챠 예측 
+                pred_text = predict_captcha_from_imgbyte(model,img_bytes)
                 
                 # 사용자 인터랙션 인터페이스
                 print(f"\n🔍 [시도 {loop_idx}] ------------------------------------")

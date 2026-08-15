@@ -3,7 +3,7 @@ from p_2607_forest.utils.webdriver_chrome import create_chrome
 from p_2607_forest.utils.webdriver_login import login_forest
 from selenium.webdriver.common.by import By
 
-from p_2607_forest.core.make_url import get_url
+from p_2607_forest.core.get_url import get_url
 from p_2607_forest.config import (TOTAL_IMAGES_TO_COLLECT, IMG_FOLDER_PATH)
 
 _TARGET_URL = get_url('first')
