@@ -16,13 +16,15 @@
 4. active_learning.py 반자동 데이터 레이블링
     - AUTO_DATA_TO_COLLECT 는 config.py 수정
     - 자동로그인 (수동 전환 가능)
-5. main.py 작동시키기
+5. main.py
     --draw      🎰 추첨 신청
     --first     🚀 선착순 예약
-    - 추첨신청 close 시, 일반예약 시도
+    --month     🈷️ 월별 예약  
+    - 추첨신청 비활성 시, 일반예약 시도
 
 ## 기타
 [x] old/learning.py & main.py 는 데이터 그림 전체 (130*35) 로 학습과 실행   
 [x] 성능 저하 이슈로 배경은 삭제하고 숫자 영역만 사용하는 코드로 변경
 [x] 1: release version
 [x] 2: core filename change
+[x] 4: add '--month' mode / check monitor

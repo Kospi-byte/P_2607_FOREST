@@ -11,31 +11,37 @@ from p_2607_forest.core.webdriver_foreste import process_reservation_step
 
 from p_2607_forest.utils.webdriver_chrome import create_chrome
 from p_2607_forest.utils.webdriver_login import login_forest
+from p_2607_forest.utils.hardware_check_monitor import check_all_monitors_scaling
 
 # 현재 파일(main.py)이 있는 폴더 기준 -> model/captcha_ml_model.pkl
 # BASE_DIR = Path(__file__).resolve().parent
 _MODEL_PATH = BASE_DIR / "src" / "p_2607_forest" / "model" / "captcha_ml_model.pkl"
 
 def main():
-    # 1. 인자 파서 생성
-    parser = argparse.ArgumentParser(description="P_2606_FOREST CLI 실행 프로그램")
-
-    # 2. CLI 플래그 옵션 추가 (action="store_true"는 해당 옵션을 붙이면 True가 됨)
+    # 1. CLI 실행
+    ## 1) 인자 파서 생성
+    parser = argparse.ArgumentParser(description="P_2607_FOREST '26.7 숲나들e 예약")
+    ## 2) CLI 플래그 옵션 추가 (action="store_true"는 해당 옵션을 붙이면 True가 됨)
     parser.add_argument("--draw", action="store_true", help="🎰 추첨 신청")
     parser.add_argument("--first", action="store_true", help="🚀 선착순 예약")
-
-    # 3. 입력된 인자 파싱
+    parser.add_argument("--month", action="store_true", help="🈷️ 월별 예약")
+    ## 3) 입력된 인자 파싱
     args = parser.parse_args()
-
-    # 4. 입력된 인자에 따라 해당 함수 실행
+    ## 4) 입력된 인자에 따라 해당 함수 실행
     if args.draw:
         _TARGET_URL = get_url('draw')
-    if args.first:
+    elif args.first:
         _TARGET_URL = get_url('first')
-    # 옵션을 둘 다 안 적었을 경우 안내 메시지 출력
-    if not args.draw and not args.first:
-        print("⚠️ 실행할 옵션을 입력해주세요.")
+    elif args.month:
+        _TARGET_URL = get_url('month')            
+    else: # 옵션을 둘 다 안 적었을 경우 안내 메시지 출력
+        print("\n❌ 실행 옵션을 입력해주세요.\n")
         parser.print_help()  # 도움말 출력    
+        return    
+    
+    # 2. 모니터 배율(해상도) 점검 (배율 높은 경우, 캡챠 이미지 사이즈 변경됨)
+    if not check_all_monitors_scaling():
+        print("❌ 프로그램 중단 - 모니터 배율 100% 아님")
         return
     
     # 2. 메인 루프 진행
