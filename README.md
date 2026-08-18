@@ -23,8 +23,9 @@
     - 추첨신청 비활성 시, 일반예약 시도
 
 ## 기타
-[x] old/learning.py & main.py 는 데이터 그림 전체 (130*35) 로 학습과 실행   
-[x] 성능 저하 이슈로 배경은 삭제하고 숫자 영역만 사용하는 코드로 변경
-[x] 1: release version
-[x] 2: core filename change
-[x] 4: add '--month' mode / check monitor
+- [x] old/learning.py & main.py 는 데이터 그림 전체 (130*35) 로 학습과 실행
+- [x] 성능 저하 이슈로 배경은 삭제하고 숫자 영역만 사용하는 코드로 변경
+- [x] 1: release version
+- [x] 2: core filename change
+- [x] 4: add '--month' mode / check monitor
+- [x] 5: use Class 'chrome_webdriver.py'

@@ -1,21 +1,10 @@
 # CLI
-import argparse
-import os
-import joblib
-from selenium.webdriver.common.by import By
-
-from p_2607_forest.config import BASE_DIR
+import argparse, os, joblib
+from p_2607_forest.config import MODEL_PATH, USER_ID, USER_PASSWORD
 from p_2607_forest.core.get_url import get_url
 from p_2607_forest.core.predict_imgbyte import predict_captcha_from_imgbyte
-from p_2607_forest.core.webdriver_foreste import process_reservation_step
-
-from p_2607_forest.utils.webdriver_chrome import create_chrome
-from p_2607_forest.utils.webdriver_login import login_forest
 from p_2607_forest.utils.hardware_check_monitor import check_all_monitors_scaling
-
-# 현재 파일(main.py)이 있는 폴더 기준 -> model/captcha_ml_model.pkl
-# BASE_DIR = Path(__file__).resolve().parent
-_MODEL_PATH = BASE_DIR / "src" / "p_2607_forest" / "model" / "captcha_ml_model.pkl"
+from p_2607_forest.utils.chrome_webdriver import ChromeBrowser
 
 def main():
     # 1. CLI 실행
@@ -44,32 +33,27 @@ def main():
         print("❌ 프로그램 중단 - 모니터 배율 100% 아님")
         return
     
-    # 2. 메인 루프 진행
+    # 3. 메인 루프 진행
     print("======= 숲나들e 자동 추첨 신청 시스템 (무한루프 버전) =======")    
-    if not os.path.exists(_MODEL_PATH):
-        print(os.path.abspath(_MODEL_PATH))
-        print(f"⚠️ 학습된 모델 파일({_MODEL_PATH})이 존재하지 않습니다!")
-        return
-        
+    if not os.path.exists(MODEL_PATH):
+        print(os.path.abspath(MODEL_PATH))
+        print(f"⚠️ 학습된 모델 파일({MODEL_PATH})이 존재하지 않습니다!")
+        return        
     print("💾 머신러닝 최적화 모델 로딩 중...")
-    model = joblib.load(_MODEL_PATH)
+    model = joblib.load(MODEL_PATH)
 
-    # 웹 브라우저(Chrome) 실행    
-    driver = create_chrome()    
+    # 4. chrome_webdriver 실행
+    driver = ChromeBrowser(headless=False, detach=True)    
+    ## 대상 URL 접속      
+    driver.go_page(_TARGET_URL)                
     
-    # 대상 URL 접속      
-    driver.get(_TARGET_URL)        
-    # 60자가 넘으면 앞 60자만 보여주고 뒤에 ... 붙이기
-    short_url = _TARGET_URL[:60] + "..." if len(_TARGET_URL) > 60 else _TARGET_URL        
-    print(f"🔗 접속 완료: {short_url}")        
-
+    # 5. 자동 로그인    
+    driver.login_foresttrip(USER_ID, USER_PASSWORD)
+        
     # 직접 로그인
     # print("💡 캡차 이미지가 완전히 로딩될 때까지 10초간 대기합니다...")
     # print("🆔 로그인 해주세요...")
-    # time.sleep(10) 
-    
-    # 자동 로그인
-    driver = login_forest(driver=driver)    
+    # time.sleep(10)     
 
     try:    
         loop_count = 1
@@ -91,9 +75,9 @@ def main():
             print("\n🚀 자동 신청 시퀀스 즉시 가동!")
             
             try:
-                # 1) 캡차 스크린샷 및 모델 예측
-                captcha_element = driver.find_element(By.ID, "captchaImg")
-                img_bytes = captcha_element.screenshot_as_png
+                # 1) 캡차 스크린샷 및 모델 예측                
+                captcha_img = driver.get_captcha_image()
+                img_bytes = captcha_img.screenshot_as_png
                 
                 pred_text = predict_captcha_from_imgbyte(model, img_bytes)
                 if not pred_text:
@@ -102,9 +86,9 @@ def main():
                     
                 print(f"🤖 AI 예측 결과 👉 [{pred_text}]")
                 
-                # 2) 폼 입력, 동의, 클릭, 알림창 확인 자동 수행
-                process_reservation_step(driver, pred_text)
-                
+                # 2) 캡챠입력 → 약관동의 → 신청클릭 → 알림창확인                
+                driver.reservation_step(pred_text)
+                           
                 loop_count += 1
                 
             except Exception as e:
@@ -114,7 +98,7 @@ def main():
 
     finally:
         print("🔒 웹 브라우저를 닫는 중...")
-        driver.quit()
+        driver.close()
         print("🏁 매크로 프로그램이 완전히 종료되었습니다.")
 
 if __name__ == "__main__":
