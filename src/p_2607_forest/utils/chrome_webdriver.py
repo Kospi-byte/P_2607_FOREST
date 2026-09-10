@@ -208,7 +208,7 @@ class ChromeBrowser:
         # 숲나들e 예약 전용 고정값
         captcha_id = "atmtcRsrvtPrvntChrct"
         agree_css = "#chkAgree, #arr_01"
-        submit_css = "#btnRsrvt, #btnRsrvtSave"
+        submit_css = "#btnRsrvt, #btnRsrvtSave, #btnWtngSave"        
         
         try:
             # 1. 캡차 입력
@@ -220,8 +220,21 @@ class ChromeBrowser:
             if not agree_checkbox.is_selected():
                 agree_checkbox.click()                
             # 3. 신청 버튼 클릭    
-            submit_button = self.driver.find_element(By.CSS_SELECTOR, submit_css)    
-            submit_button.click()
+            submit_button = self.driver.find_elements(By.CSS_SELECTOR, submit_css)    
+            # submit_button.click()
+            for btn in submit_button:
+                if btn.is_displayed():  # style="display: none;" 확인
+                    btn.click()
+                    break            
+            
+            # wait_css = "#btnWtngSave"
+            # try:
+            #     submit_button = self.driver.find_element(By.CSS_SELECTOR, submit_css)    
+            #     submit_button.click()
+            # except WebDriverException:
+            #     submit_button = self.driver.find_element(By.CSS_SELECTOR, wait_css)    
+            #     submit_button.click()
+            
             print("🔘 정보 입력 및 신청 버튼 클릭 완료.")            
             # 4. 알림창 확인
             print("⏳ 브라우저 알림창 탐지 중...")

@@ -17,7 +17,7 @@ def process_reservation_step(driver, pred_text):
         agree_checkbox.click()
         
     # 3. 신청 버튼 클릭    
-    submit_button = driver.find_element(By.CSS_SELECTOR, '#btnRsrvt, #btnRsrvtSave')    
+    submit_button = driver.find_element(By.CSS_SELECTOR, '#btnRsrvt, #btnRsrvtSave, #btnWtngSave')    
     submit_button.click()
     print("🔘 정보 입력 및 신청 버튼 클릭 완료.")
     
