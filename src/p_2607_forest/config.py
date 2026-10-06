@@ -79,7 +79,8 @@ NUMBER_HEIGHT = IMG_HEIGHT - DEL_WIDTH_B # (하여백 제거용)
 IMG_LENGTH = COUNT_OF_NUMBER # 글자수
 
 # 3. ID / PW
-USER_ID = get_env_str("USER_ID", "default_id")
+USER_ID_BK = get_env_str("USER_ID_BK", "default_id")
+USER_ID_JS = get_env_str("USER_ID_JS", "default_id")
 USER_PASSWORD = get_env_str("USER_PASSWORD", "default_pw")
 # USER_ID = os.getenv("USER_ID", "default_user")
 # USER_PASSWORD = os.getenv("USER_PASSWORD", "default_pw")

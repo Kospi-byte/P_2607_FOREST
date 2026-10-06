@@ -21,6 +21,8 @@
     --first     🚀 선착순 예약
     --month     🈷️ 월별 예약  
     - 추첨신청 비활성 시, 일반예약 시도
+    --bk        🆔 BK
+    --js        🆔 JS
 
 ## 기타
 - [x] old/learning.py & main.py 는 데이터 그림 전체 (130*35) 로 학습과 실행
@@ -29,3 +31,5 @@
 - [x] 2: core filename change
 - [x] 4: add '--month' mode / check monitor
 - [x] 5: use Class 'chrome_webdriver.py'
+- [x] 6: wait bug fix
+- [x] 7: add '--bk --js' login mode

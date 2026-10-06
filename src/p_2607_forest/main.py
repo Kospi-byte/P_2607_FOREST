@@ -1,6 +1,6 @@
 # CLI
 import argparse, os, joblib
-from p_2607_forest.config import MODEL_PATH, USER_ID, USER_PASSWORD
+from p_2607_forest.config import MODEL_PATH, USER_ID_BK, USER_ID_JS, USER_PASSWORD
 from p_2607_forest.core.get_url import get_url
 from p_2607_forest.core.predict_imgbyte import predict_captcha_from_imgbyte
 from p_2607_forest.utils.hardware_check_monitor import check_all_monitors_scaling
@@ -14,6 +14,8 @@ def main():
     parser.add_argument("--draw", action="store_true", help="🎰 추첨 신청")
     parser.add_argument("--first", action="store_true", help="🚀 선착순 예약")
     parser.add_argument("--month", action="store_true", help="🈷️ 월별 예약")
+    parser.add_argument("--bk", action="store_true", help="🆔 BK")
+    parser.add_argument("--js", action="store_true", help="🆔 JS")
     ## 3) 입력된 인자 파싱
     args = parser.parse_args()
     ## 4) 입력된 인자에 따라 해당 함수 실행
@@ -26,7 +28,16 @@ def main():
     else: # 옵션을 둘 다 안 적었을 경우 안내 메시지 출력
         print("\n❌ 실행 옵션을 입력해주세요.\n")
         parser.print_help()  # 도움말 출력    
-        return    
+        return
+
+    if args.bk:
+        _USER_ID = USER_ID_BK
+    elif args.js:
+        _USER_ID = USER_ID_JS    
+    else: # 옵션을 둘 다 안 적었을 경우 안내 메시지 출력
+        print("\n❌ 로그인 ID를 선택해주세요.\n")
+        parser.print_help()  # 도움말 출력    
+        return
     
     # 2. 모니터 배율(해상도) 점검 (배율 높은 경우, 캡챠 이미지 사이즈 변경됨)
     if not check_all_monitors_scaling():
@@ -48,7 +59,7 @@ def main():
     driver.go_page(_TARGET_URL)                
     
     # 5. 자동 로그인    
-    driver.login_foresttrip(USER_ID, USER_PASSWORD)
+    driver.login_foresttrip(_USER_ID, USER_PASSWORD)
         
     # 직접 로그인
     # print("💡 캡차 이미지가 완전히 로딩될 때까지 10초간 대기합니다...")
