@@ -59,12 +59,7 @@ def main():
     driver.go_page(_TARGET_URL)                
     
     # 5. 자동 로그인    
-    driver.login_foresttrip(_USER_ID, USER_PASSWORD)
-        
-    # 직접 로그인
-    # print("💡 캡차 이미지가 완전히 로딩될 때까지 10초간 대기합니다...")
-    # print("🆔 로그인 해주세요...")
-    # time.sleep(10)     
+    driver.login_foresttrip(_USER_ID, USER_PASSWORD)    
 
     try:    
         loop_count = 1

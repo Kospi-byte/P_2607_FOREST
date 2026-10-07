@@ -1,4 +1,4 @@
-from p_2607_forest.config import USER_ID, USER_PASSWORD
+from p_2607_forest.config import USER_ID_BK, USER_PASSWORD
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoAlertPresentException, WebDriverExcepti
 def print_credentials() -> None:
     """ID와 Password를 출력하는 함수"""
     print("=== [계정 정보 확인] ===")
-    print(f"ID       : {USER_ID}")
+    print(f"ID       : {USER_ID_BK}")
     print(f"Password : {USER_PASSWORD}")
 
 def login_forest(driver: webdriver.Chrome) -> webdriver.Chrome:
@@ -18,7 +18,7 @@ def login_forest(driver: webdriver.Chrome) -> webdriver.Chrome:
     # 1. 아이디 입력
     id_input = driver.find_element(By.XPATH, '//*[@id="mmberId"]')
     id_input.clear()
-    id_input.send_keys(USER_ID)
+    id_input.send_keys(USER_ID_BK)
 
     # 2. 비밀번호 입력
     pw_input = driver.find_element(By.XPATH, '//*[@id="gnrlMmberPssrd"]')
